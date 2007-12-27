@@ -1,0 +1,22 @@
+= Flotilla
+
+Flotilla is a Rails plugin that provides the functionality of the flot plugin 
+for jQuery within Rails applications.
+
+== Resources
+
+Install
+
+* ruby script/plugin install http://flotilla.rubyforge.org/svn/trunk/plugins/flotilla/
+
+Project Page
+
+* http://flotilla.rubyforge.org/
+
+flot
+
+* http://flot.googlecode.com/
+
+jRails
+
+* http://www.ennerchi.com/projects/jrails
