@@ -15,41 +15,65 @@ module ActionView
       # :options => { :points => :show }},<br>
       # :grid => { :backgroundColor => %{"#fffaff"} })</tt>
       #
-      def chart(placeholder, collections, options = nil)
+      def chart(placeholder, series, options = nil)
         
         javascript = %{<!--[if IE]><script language="javascript" type="text/javascript" src="/javascripts/excanvas.js"></script><![endif]-->}
-        javascript << %{<script type="text/javascript">var data = [}
-        collections.each do |name, collection|
-            javascript << %{\{ label: "#{name}",\n data: [}
-            collection[:collection].each do |object|
-              javascript << "[#{object[collection[:x]]},#{object[collection[:y]]}],"
-            end
-            javascript = javascript.remove_trailing_comma << "], \n"
+        javascript << %{<script type="text/javascript">\nvar data = [}
+        date_range = ""
 
-            collection[:options].each do |option,value|
-              javascript << "#{option.to_s}: { #{value.to_s}: true},"
+        series.each do |name, details|
+          unless details[:collection].size == 0
+            javascript << %{\{ label: "#{name}", data: [}
+            date_range = "["
+            details[:collection].each do |object|
+              x = object.send(details[:x])
+              y = object.send(details[:y])
+              if x.is_a? Date
+                javascript << "[#{x.ld},#{y}],"
+                date_range << %{[#{x.ld}, "#{x.mon}/#{x.mday}"],}
+              else
+                javascript << "[#{x},#{y}]"
+              end
             end
+            date_range = date_range.remove_trailing_comma << "]"
+            javascript = javascript.remove_trailing_comma << "], "
+                    
+            if details[:options]
+              details[:options].each do |option,value|
+                javascript << "#{option.to_s}: { #{value.to_s}: true},"
+              end
+            end
+
             javascript = javascript.remove_trailing_comma <<  "},"
           end
+        end
         
-        javascript = javascript.remove_trailing_comma << "];"
+        javascript = javascript.remove_trailing_comma << "];\n"
 
         javascript << "$.plot($('##{placeholder}'), data"
         
-        if options
+        if options || date_range.size > 4
+          
           javascript << ", {"
-          options.each do |option,value|
-            javascript << "#{option}: {"
-            value.each do |value_name, value_value|
-              javascript << "#{value_name}: #{value_value},"
-            end
-            javascript = javascript.remove_trailing_comma << " },"
+          
+          if date_range.size > 4
+            javascript << "xaxis: {ticks: #{date_range}},"
           end
+
+          if options
+            options.each do |option,value|
+              javascript << "#{option}: {"
+              value.each do |value_name, value_value|
+                javascript << "#{value_name}: #{value_value},"
+              end
+              javascript = javascript.remove_trailing_comma << " },"
+            end
+          end
+
           javascript = javascript.remove_trailing_comma << "}"
+          javascript << %{);</script>}
         end
-        
-        javascript << %{);</script>}
-        
+      
       end
       
     end
