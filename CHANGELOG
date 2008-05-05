@@ -1,3 +1,6 @@
+v0.2.1 - 05 May 2008
+* Encode values as strings for json/pure compatibility
+
 v0.2 - 02 May 2008
 
 * Upgraded to Flot v0.4
