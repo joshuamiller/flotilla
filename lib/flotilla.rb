@@ -1,4 +1,4 @@
-require 'json/ext'
+require 'json'
 
 module ActionView
   module Helpers
@@ -14,7 +14,7 @@ module ActionView
       # { "January" => { :collection => @january, :x => :day, :y => :sales, 
       # :options => { :bar => :show } }, <br>
       # "February" => { :collection => @february, :x => :day, :y => :sales, 
-      # :options => { :points => :show }},<br>
+      # :options => { :points => 'show' }},<br>
       # :grid => { :backgroundColor => %{"#fffaff"} })</tt>
       #
       def chart(placeholder, series, options = {})
@@ -22,11 +22,11 @@ module ActionView
         data, x_is_date, y_is_date = series_to_json(series)
         if x_is_date
           options[:xaxis] ||= {}
-          options[:xaxis].merge!({ :mode => :time })
+          options[:xaxis].merge!({ :mode => 'time' })
         end
         if y_is_date
           options[:yaxis] ||= {}
-          options[:yaxis].merge!({ :mode => :time })
+          options[:yaxis].merge!({ :mode => 'time' })
         end
 
         javascript = <<EOF
