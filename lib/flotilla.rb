@@ -12,7 +12,7 @@ module ActionView
       # Example usage:
       # <tt>chart("graph_div", <br>
       # { "January" => { :collection => @january, :x => :day, :y => :sales, 
-      # :options => { :bar => :show } }, <br>
+      # :options => { :bar => 'show' } }, <br>
       # "February" => { :collection => @february, :x => :day, :y => :sales, 
       # :options => { :points => 'show' }},<br>
       # :grid => { :backgroundColor => %{"#fffaff"} })</tt>
