@@ -1,3 +1,6 @@
+v0.2.2 - 07 May 2008
+* Correctly handle graph-wide options <Mathias Sulser>
+
 v0.2.1 - 05 May 2008
 * Encode values as strings for json/pure compatibility
 
