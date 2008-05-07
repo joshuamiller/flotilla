@@ -10,13 +10,12 @@ module ActionView
       # contains graph-wide options.
       # 
       # Example usage:
-      # <tt>chart("graph_div", <br>
-      # { "January" => { :collection => @january, :x => :day, :y => :sales, 
-      # :options => { :bar => 'show' } }, <br>
-      # "February" => { :collection => @february, :x => :day, :y => :sales, 
-      # :options => { :points => 'show' }},<br>
-      # :grid => { :backgroundColor => %{"#fffaff"} })</tt>
-      #
+      #   
+      #  chart("graph_div" { 
+      #   "January" => { :collection => @january, :x => :day, :y => :sales, :options => { :lines => {:show =>true}} }, 
+      #   "February" => { :collection => @february, :x => :day, :y => :sales, :options => { :points => {:show =>true} } },
+      #   :grid => { :backgroundColor => "#fffaff" })
+      # 
       def chart(placeholder, series, options = {})
 
         data, x_is_date, y_is_date = series_to_json(series)
@@ -55,7 +54,7 @@ EOF
             data << [x,y]
           end
           set[:data] = data
-          values[:options].each {|option| set << option} if values[:options]
+          values[:options].each {|option, parameters| set[option] = parameters } if values[:options]
           data_sets << set
         end
         return data_sets.to_json, x_is_date, y_is_date
