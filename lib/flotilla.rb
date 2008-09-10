@@ -1,4 +1,8 @@
-require 'json'
+begin
+  require 'json'
+rescue LoadError
+  p "Flotilla will not work without the 'json' gem"
+end
 
 module ActionView
   module Helpers
@@ -11,12 +15,15 @@ module ActionView
       # 
       # Example usage:
       #   
-      #  chart("graph_div" { 
+      #  chart("graph_div", { 
       #   "January" => { :collection => @january, :x => :day, :y => :sales, :options => { :lines => {:show =>true}} }, 
       #   "February" => { :collection => @february, :x => :day, :y => :sales, :options => { :points => {:show =>true} } },
       #   :grid => { :backgroundColor => "#fffaff" })
       # 
-      def chart(placeholder, series, options = {})
+      # Options:
+      #   :js_tags - wraps resulting javascript in javascript tags if true.  Defaults to true.
+      def chart(placeholder, series, options = {}, html_options = {})
+        html_options.reverse_merge!({ :js_tags => true })
 
         data, x_is_date, y_is_date = series_to_json(series)
         if x_is_date
@@ -28,13 +35,8 @@ module ActionView
           options[:yaxis].merge!({ :mode => 'time' })
         end
 
-        javascript = <<EOF
-        <!--[if IE]><script language="javascript" type="text/javascript" src="/javascripts/excanvas.pack.js"></script><![endif]-->
-        <script language="javascript" type="text/javascript" src="/javascripts/jquery.flot.pack.js"></script>
-        <script type="text/javascript">
-          $.plot($('##{placeholder}'), #{data}, #{options.to_json});
-        </script>
-EOF
+        chart_js = "$.plot($('##{placeholder}'), #{data}, #{options.to_json});"
+        html_options[:js_tags] ? javascript_tag(chart_js) : chart_js
       end
 
       private
@@ -45,8 +47,9 @@ EOF
         series.each do |name, values|
           set, data = {}, []
           set[:label] = name
-          x_is_date = values[:collection].first.send(values[:x]).is_a? Date
-          y_is_date = values[:collection].first.send(values[:y]).is_a? Date
+          first = values[:collection].first
+          x_is_date = first.send(values[:x]).acts_like?(:date) || first.send(values[:x]).acts_like?(:time)
+          y_is_date = first.send(values[:y]).acts_like?(:date) || first.send(values[:y]).acts_like?(:time)
           values[:collection].each do |object|
             x_value, y_value = object.send(values[:x]), object.send(values[:y])
             x = x_is_date ? x_value.to_time.to_i * 1000 : x_value.to_f

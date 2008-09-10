@@ -7,5 +7,3 @@ rescue
 end
 
 require 'flotilla'
-
-ActionView::Helpers
