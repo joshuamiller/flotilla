@@ -24,7 +24,6 @@ module ActionView
       #   :js_tags - wraps resulting javascript in javascript tags if true.  Defaults to true.
       def chart(placeholder, series, options = {}, html_options = {})
         html_options.reverse_merge!({ :js_tags => true })
-
         data, x_is_date, y_is_date = series_to_json(series)
         if x_is_date
           options[:xaxis] ||= {}
@@ -40,7 +39,6 @@ module ActionView
       end
 
       private
-
       def series_to_json(series)
         data_sets = []
         x_is_date, y_is_date = false, false
@@ -48,8 +46,10 @@ module ActionView
           set, data = {}, []
           set[:label] = name
           first = values[:collection].first
-          x_is_date = first.send(values[:x]).acts_like?(:date) || first.send(values[:x]).acts_like?(:time)
-          y_is_date = first.send(values[:y]).acts_like?(:date) || first.send(values[:y]).acts_like?(:time)
+          if first
+            x_is_date = first.send(values[:x]).acts_like?(:date) || first.send(values[:x]).acts_like?(:time)
+            y_is_date = first.send(values[:y]).acts_like?(:date) || first.send(values[:y]).acts_like?(:time)
+          end
           values[:collection].each do |object|
             x_value, y_value = object.send(values[:x]), object.send(values[:y])
             x = x_is_date ? x_value.to_time.to_i * 1000 : x_value.to_f
