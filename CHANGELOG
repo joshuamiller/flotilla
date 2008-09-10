@@ -1,3 +1,7 @@
+v0.3 - 10 September 2008
+* Better date handling with acts_like_date <Jerry Cheung>
+* Catch empty collections for series <Jerry Cheung>
+
 v0.2.2 - 07 May 2008
 * Correctly handle graph-wide options <Mathias Sulser>
 
