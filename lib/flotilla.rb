@@ -21,8 +21,10 @@ module ActionView
       #   :grid => { :backgroundColor => "#fffaff" })
       # 
       # Options:
+      #   :js_includes - includes flot library inline
       #   :js_tags - wraps resulting javascript in javascript tags if true.  Defaults to true.
       #   :placeholder_tag - appends a placeholder div for graph
+      #   :placeholder_size - specifys the size of the placeholder div
       def chart(placeholder, series, options = {}, html_options = {})
         html_options.reverse_merge!({ :js_includes => true, :js_tags => true, :placeholder_tag => true, :placeholder_size => "800x300" })
         width, height = html_options[:placeholder_size].split("x") if html_options[:placeholder_size].respond_to?(:split)
