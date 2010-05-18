@@ -7,7 +7,7 @@ for jQuery within Rails applications.
 
 Install
 
-* ruby script/plugin install http://flotilla.rubyforge.org/svn/trunk/plugins/flotilla/
+* ruby script/plugin install git://github.com/joshuamiller/flotilla.git
 
 Project Page
 
@@ -16,7 +16,3 @@ Project Page
 flot
 
 * http://flot.googlecode.com/
-
-jRails
-
-* http://www.ennerchi.com/projects/jrails
