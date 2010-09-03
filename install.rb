@@ -1,4 +1,4 @@
-require 'FileUtils'
+require 'fileutils'
 
 dir = Dir.getwd
 
